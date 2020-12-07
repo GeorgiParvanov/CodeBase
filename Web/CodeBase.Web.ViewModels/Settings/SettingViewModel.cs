@@ -1,9 +1,8 @@
 ﻿namespace CodeBase.Web.ViewModels.Settings
 {
+    using AutoMapper;
     using CodeBase.Data.Models;
     using CodeBase.Services.Mapping;
-
-    using AutoMapper;
 
     public class SettingViewModel : IMapFrom<Setting>, IHaveCustomMappings
     {
