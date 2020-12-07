@@ -26,6 +26,18 @@
 
         public DbSet<Setting> Settings { get; set; }
 
+        public DbSet<Tag> Tags { get; set; }
+
+        public DbSet<Course> Courses { get; set; }
+
+        public DbSet<Lecture> Lectures { get; set; }
+
+        public DbSet<Cheatsheet> Cheatsheets { get; set; }
+
+        public DbSet<UserCourse> UserCourses { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)

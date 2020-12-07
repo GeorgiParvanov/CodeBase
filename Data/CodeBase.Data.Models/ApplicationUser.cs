@@ -16,7 +16,16 @@ namespace CodeBase.Data.Models
             this.Roles = new HashSet<IdentityUserRole<string>>();
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
+            this.Courses = new HashSet<UserCourse>();
+
+            // TODO: this.Comments = new HashSet<Comment>();
         }
+
+        public decimal Balance { get; set; }
+
+        public virtual ICollection<UserCourse> Courses { get; set; }
+
+        // TODO: public virtual ICollection<Comment> Comments { get; set; }
 
         // Audit info
         public DateTime CreatedOn { get; set; }
