@@ -9,6 +9,7 @@
     using CodeBase.Data.Repositories;
     using CodeBase.Data.Seeding;
     using CodeBase.Services.Data;
+    using CodeBase.Services.Data.Contracts;
     using CodeBase.Services.Mapping;
     using CodeBase.Services.Messaging;
     using CodeBase.Web.ViewModels;
@@ -64,6 +65,7 @@
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
+            services.AddTransient<ICoursesService, CoursesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,7 +1,17 @@
-﻿
+﻿@model CodeBase.Web.ViewModels.Courses.CoursesListViewModel
+
 @{
-    ViewData["Title"] = "Course";
+    ViewData["Title"] = "Courses";
 }
 
-<h1>Course</h1>
+<h1>place courses here</h1>
+
+@foreach (var course in Model.Courses)
+{
+    <div>Name: @course.Name</div>
+    <div>Description: @course.Description</div>
+    <div>Price: @course.Price</div>
+    <div>Difficulty: @course.Difficulty</div>
+    <div>Tag: @course.Tag.Name</div>
+}
 
