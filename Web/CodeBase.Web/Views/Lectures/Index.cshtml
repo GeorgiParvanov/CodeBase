@@ -1,0 +1,22 @@
+﻿@model CodeBase.Web.ViewModels.Lectures.LectureListViewModel
+@{
+    ViewData["Title"] = "Lectures";
+}
+
+@foreach (var lecture in Model.Lectures)
+{
+    <div class="card text-center">
+        <div class="card-header">
+            Read Time: @lecture.ReadTime
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">@lecture.Name</h5>
+            <p class="card-text">@lecture.Content</p>
+            <a asp-controller="Lectures" asp-action="Lecture" asp-route-id="@lecture.Id" class="btn btn-primary">Open Lecture</a>
+        </div>
+        @*<div class="card-footer text-muted">
+            should here be something
+        </div>*@
+    </div>
+}
+
