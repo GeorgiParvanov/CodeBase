@@ -4,14 +4,20 @@
     ViewData["Title"] = "Courses";
 }
 
-<h1>place courses here</h1>
-
 @foreach (var course in Model.Courses)
 {
-    <div>Name: @course.Name</div>
-    <div>Description: @course.Description</div>
-    <div>Price: @course.Price</div>
-    <div>Difficulty: @course.Difficulty</div>
-    <div>Tag: @course.Tag.Name</div>
+    <div class="card text-center">
+        <div class="card-header">
+            @course.Difficulty
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">@course.Name</h5>
+            <p class="card-text">@course.Price</p>
+            <a href="#" class="btn btn-primary">Purchase Course</a>
+        </div>
+        <div class="card-footer text-muted">
+            @course.Tag.Name
+        </div>
+    </div>
 }
 
