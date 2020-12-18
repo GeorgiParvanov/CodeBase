@@ -23,6 +23,14 @@
             return this.courcesRepository.All().To<T>().ToList();
         }
 
+        public T GetById<T>(int id)
+        {
+            return this.courcesRepository.All()
+                .Where(c => c.Id == id)
+                .To<T>()
+                .FirstOrDefault();
+        }
+
         public int GetCount()
         {
             return this.courcesRepository.AllAsNoTracking().Count();

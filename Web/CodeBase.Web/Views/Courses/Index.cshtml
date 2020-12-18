@@ -14,6 +14,7 @@
             <h5 class="card-title">@course.Name</h5>
             <p class="card-text">@course.Description</p>
             <a href="#" class="btn btn-primary">Purchase Course</a>
+            <a asp-controller="Courses" asp-action="course" asp-route-id="@course.Id" class="btn btn-primary">View Lectures</a>
         </div>
         <div class="card-footer text-muted">
             @course.Tag.Name

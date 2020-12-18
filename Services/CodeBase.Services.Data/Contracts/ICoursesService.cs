@@ -7,5 +7,7 @@
         int GetCount();
 
         IEnumerable<T> GetAll<T>();
+
+        T GetById<T>(int id);
     }
 }

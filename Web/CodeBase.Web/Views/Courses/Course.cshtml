@@ -1,0 +1,25 @@
+﻿@model CodeBase.Web.ViewModels.Courses.CoursesViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div>Name of the course: @Model.Name</div>
+<a asp-controller="Courses" asp-action="Index">Back to courses</a>
+
+@foreach (var lecture in Model.Lectures)
+{
+    <div class="card text-center">
+        <div class="card-header">
+            @lecture.ReadTime
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">@lecture.Name</h5>
+            <p class="card-text">@lecture.Content</p>
+            <a href="#" class="btn btn-primary">Purchase Course</a>
+        </div>
+        <div class="card-footer text-muted">
+            <a asp-controller="Lectures" asp-action="Lecture" asp-route-id="@lecture.Id">Open Lecture</a>
+        </div>
+    </div>
+}

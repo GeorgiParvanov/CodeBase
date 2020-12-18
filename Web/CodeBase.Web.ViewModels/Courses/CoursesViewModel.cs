@@ -1,12 +1,17 @@
 ﻿namespace CodeBase.Web.ViewModels.Courses
 {
+    using System.Collections.Generic;
+
     using CodeBase.Data.Common.Enums;
     using CodeBase.Data.Models;
     using CodeBase.Services.Mapping;
+    using CodeBase.Web.ViewModels.Cheatsheet;
+    using CodeBase.Web.ViewModels.Lectures;
 
-    // using System.Collections.Generic;
     public class CoursesViewModel : IMapFrom<Course>
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -21,8 +26,8 @@
         // TODO: This has to be am IEnumerable collection of TagViewModels after I change the bd ???
         public virtual Tag Tag { get; set; }
 
-        public virtual Cheatsheet Cheatsheet { get; set; }
+        public virtual CheatsheetViewModel Cheatsheet { get; set; }
 
-        // public virtual IEnumerable<LectureViewModel> Lectures { get; set; }
+        public virtual IEnumerable<LectureViewModel> Lectures { get; set; }
     }
 }

@@ -20,5 +20,12 @@
 
             return this.View(model);
         }
+
+        public IActionResult Course(int id)
+        {
+            var model = this.coursesService.GetById<CoursesViewModel>(id);
+
+            return this.View(model);
+        }
     }
 }
