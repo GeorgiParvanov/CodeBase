@@ -252,16 +252,50 @@ namespace CodeBase.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("TagId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("IsDeleted");
 
-                    b.HasIndex("TagId");
-
                     b.ToTable("Courses");
+                });
+
+            modelBuilder.Entity("CodeBase.Data.Models.CourseTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TagId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TagId1")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("TagId1");
+
+                    b.ToTable("CourseTags");
                 });
 
             modelBuilder.Entity("CodeBase.Data.Models.Lecture", b =>
@@ -274,7 +308,7 @@ namespace CodeBase.Data.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CourseId")
+                    b.Property<int>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
@@ -529,20 +563,26 @@ namespace CodeBase.Data.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("CodeBase.Data.Models.Course", b =>
+            modelBuilder.Entity("CodeBase.Data.Models.CourseTag", b =>
                 {
-                    b.HasOne("CodeBase.Data.Models.Tag", "Tag")
-                        .WithMany("Courses")
-                        .HasForeignKey("TagId")
+                    b.HasOne("CodeBase.Data.Models.Course", "Course")
+                        .WithMany("Tags")
+                        .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("CodeBase.Data.Models.Tag", "Tag")
+                        .WithMany("Courses")
+                        .HasForeignKey("TagId1");
                 });
 
             modelBuilder.Entity("CodeBase.Data.Models.Lecture", b =>
                 {
-                    b.HasOne("CodeBase.Data.Models.Course", null)
+                    b.HasOne("CodeBase.Data.Models.Course", "Course")
                         .WithMany("Lectures")
-                        .HasForeignKey("CourseId");
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CodeBase.Data.Models.UserCourse", b =>

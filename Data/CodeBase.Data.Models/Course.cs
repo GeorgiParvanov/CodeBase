@@ -11,6 +11,7 @@
         {
             this.Users = new HashSet<UserCourse>();
             this.Lectures = new HashSet<Lecture>();
+            this.Tags = new HashSet<CourseTag>();
         }
 
         public string Name { get; set; }
@@ -21,9 +22,7 @@
 
         public Difficulty Difficulty { get; set; }
 
-        public int TagId { get; set; }
-
-        public virtual Tag Tag { get; set; }
+        public virtual ICollection<CourseTag> Tags { get; set; }
 
         public virtual ICollection<Lecture> Lectures { get; set; }
 

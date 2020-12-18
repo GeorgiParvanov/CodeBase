@@ -1,5 +1,6 @@
 ﻿namespace CodeBase.Data.Models
 {
+    using System;
     using System.Collections.Generic;
 
     using CodeBase.Data.Common.Models;
@@ -8,12 +9,17 @@
     {
         public Tag()
         {
-            this.Courses = new HashSet<Course>();
+            this.Courses = new HashSet<CourseTag>();
         }
 
         public string Name { get; set; }
 
-        public virtual ICollection<Course> Courses { get; set; }
+        public virtual ICollection<CourseTag> Courses { get; set; }
+
+        public object Select(Func<object, object> p)
+        {
+            throw new NotImplementedException();
+        }
 
         // TODO: add image?
     }

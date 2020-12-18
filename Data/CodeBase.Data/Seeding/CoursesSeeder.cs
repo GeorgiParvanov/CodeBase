@@ -1,6 +1,7 @@
 ﻿namespace CodeBase.Data.Seeding
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -25,7 +26,13 @@
                     Description = "This is a c# beginners course",
                     Price = 13.00m,
                     Difficulty = Difficulty.Beginner,
-                    Tag = seeShrarpTag,
+                    Tags = new List<CourseTag>()
+                    {
+                        new CourseTag
+                        {
+                            Tag = seeShrarpTag,
+                        },
+                    },
                     Cheatsheet = new Cheatsheet
                     {
                         Content = "This is the cheatsheet of the c# beginners course",
@@ -43,7 +50,13 @@
                     Description = "This is a c# intermidiate course",
                     Price = 13.00m,
                     Difficulty = Difficulty.Intermediate,
-                    Tag = seeShrarpTag,
+                    Tags = new List<CourseTag>()
+                    {
+                        new CourseTag
+                        {
+                            Tag = seeShrarpTag,
+                        },
+                    },
                     Cheatsheet = new Cheatsheet
                     {
                         Content = "This is the cheatsheet of the c# intermidiate course",
@@ -61,7 +74,13 @@
                     Description = "This is a c# advanced course",
                     Price = 13.00m,
                     Difficulty = Difficulty.Advanced,
-                    Tag = seeShrarpTag,
+                    Tags = new List<CourseTag>()
+                    {
+                        new CourseTag
+                        {
+                            Tag = seeShrarpTag,
+                        },
+                    },
                     Cheatsheet = new Cheatsheet
                     {
                         Content = "This is the cheatsheet of the c# advanced course",

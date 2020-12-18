@@ -17,7 +17,10 @@
             <a asp-controller="Courses" asp-action="course" asp-route-id="@course.Id" class="btn btn-primary">View Lectures</a>
         </div>
         <div class="card-footer text-muted">
-            @course.Tag.Name
+            @foreach (var tag in course.Tags)
+            {
+                @tag.Name
+            }
         </div>
     </div>
 }
