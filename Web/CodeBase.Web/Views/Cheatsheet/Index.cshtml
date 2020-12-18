@@ -1,0 +1,9 @@
+﻿@model CodeBase.Web.ViewModels.Cheatsheet.CheatsheetViewModel
+
+@{ 
+    ViewData["Title"] = "Cheatsheet";
+}
+
+<div>@Model.Content</div>
+
+<a asp-controller="Courses" asp-action="Course" asp-route-id="@Model.CourseId">Go back to course</a>
