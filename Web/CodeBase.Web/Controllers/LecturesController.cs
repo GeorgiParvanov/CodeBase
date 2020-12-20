@@ -25,6 +25,11 @@
         {
             var model = this.lecturesService.GetById<LectureViewModel>(id);
 
+            if (model == null)
+            {
+                return this.NotFound();
+            }
+
             return this.View(model);
         }
     }
