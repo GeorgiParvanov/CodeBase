@@ -2,12 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
+    using AutoMapper;
     using CodeBase.Data.Models;
     using CodeBase.Services.Mapping;
     using Ganss.XSS;
 
-    public class LectureViewModel : IMapFrom<Lecture>
+    public class LectureViewModel : IMapFrom<Lecture>, IHaveCustomMappings
     {
         public int Id { get; set; }
 
@@ -19,6 +21,8 @@
 
         public string UserUserName { get; set; }
 
+        public int VotesCount { get; set; }
+
         public DateTime CreatedOn { get; set; }
 
         // TODO: move Difficulty enum to CodeBase.Common and uncomment Difficulty prop here
@@ -26,5 +30,14 @@
         public TimeSpan ReadTime { get; set; }
 
         public virtual IEnumerable<LectureCommentViewModel> Comments { get; set; }
+
+        public void CreateMappings(IProfileExpression configuration)
+        {
+            configuration.CreateMap<Lecture, LectureViewModel>()
+                .ForMember(lvm => lvm.VotesCount, options =>
+                {
+                    options.MapFrom(l => l.Votes.Sum(v => (int)v.Type));
+                });
+        }
     }
 }

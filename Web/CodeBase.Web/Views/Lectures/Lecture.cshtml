@@ -75,7 +75,7 @@
                                     <i class="fa fa-thumbs-up"></i>
                                 </a>
                             </div>
-                            @*<div id="votesCount">@Model.VotesCount</div>*@
+                            <div id="votesCount">@Model.VotesCount</div>
                             <div>
                                 <a href="#" onclick="sendVote(@Model.Id, false)">
                                     <i class="fa fa-thumbs-down"></i>
@@ -91,8 +91,10 @@
 
                     @if (this.User.Identity.IsAuthenticated)
                     {
-                        <div class="px-4 pt-3"> <button type="button" class="btn btn-primary float-right" onclick="showAddCommentForm(0)"><i class="fa fa-plus"></i>&nbsp; Comment</button> </div>
-                        <div class="clearfix"></div>}
+                        <div class="px-4 pt-3"> <button type="button" class="btn btn-primary float-right" onclick="showAddCommentForm(0)"><i class="fa fa-plus"></i>&nbsp; Comment</button> 
+                        </div>
+                        <div class="clearfix"></div>
+                     }
                     @{ DisplayComments(null); }
                 </div>
             </div>
