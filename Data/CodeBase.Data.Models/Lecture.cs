@@ -11,6 +11,7 @@
         public Lecture()
         {
             this.Comments = new HashSet<Comment>();
+            this.Votes = new HashSet<Vote>();
         }
 
         public string Name { get; set; }
@@ -27,6 +28,6 @@
 
         public virtual ICollection<Comment> Comments { get; set; }
 
-        // TODO: rating?
+        public virtual ICollection<Vote> Votes { get; set; }
     }
 }
