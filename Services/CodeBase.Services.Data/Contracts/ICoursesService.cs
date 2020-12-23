@@ -8,6 +8,8 @@
 
         IEnumerable<T> GetAll<T>();
 
+        IEnumerable<T> GetAllByTagName<T>(string tagName);
+
         T GetById<T>(int id);
     }
 }

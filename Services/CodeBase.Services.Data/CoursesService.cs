@@ -23,6 +23,14 @@
             return this.courcesRepository.All().To<T>().ToList();
         }
 
+        public IEnumerable<T> GetAllByTagName<T>(string tagName)
+        {
+            return this.courcesRepository.All()
+                .Where(c => c.Tags.Any(t => t.Tag.Name == tagName))
+                .To<T>()
+                .ToList();
+        }
+
         public T GetById<T>(int id)
         {
             return this.courcesRepository.All()

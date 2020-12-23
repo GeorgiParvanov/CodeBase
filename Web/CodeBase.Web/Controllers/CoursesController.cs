@@ -21,6 +21,14 @@
             return this.View(model);
         }
 
+        public IActionResult ByTag(string name)
+        {
+            var courses = this.coursesService.GetAllByTagName<CoursesViewModel>(name);
+            var model = new CoursesListViewModel { Courses = courses };
+
+            return this.View(model);
+        }
+
         public IActionResult Course(int id)
         {
             var model = this.coursesService.GetById<CoursesViewModel>(id);

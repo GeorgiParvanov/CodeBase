@@ -16,11 +16,6 @@
 
         public virtual ICollection<CourseTag> Courses { get; set; }
 
-        public object Select(Func<object, object> p)
-        {
-            throw new NotImplementedException();
-        }
-
         // TODO: add image?
     }
 }

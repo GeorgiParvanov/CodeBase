@@ -19,7 +19,7 @@
         <div class="card-footer text-muted">
             @foreach (var tag in course.Tags)
             {
-                <a asp-controller="Courses" asp-action="ByTag" asp-route-name="@tag.Name">@tag.Name</a>
+                <a asp-controller="Courses" asp-action="index" asp-route-id="@tag.Name">@tag.Name</a>
             }
         </div>
     </div>
