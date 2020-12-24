@@ -11,21 +11,32 @@
 
     public class CoursesService : ICoursesService
     {
-        private readonly IDeletableEntityRepository<Course> courcesRepository;
+        private readonly IDeletableEntityRepository<Course> coursesRepository;
 
         public CoursesService(IDeletableEntityRepository<Course> courcesRepository)
         {
-            this.courcesRepository = courcesRepository;
+            this.coursesRepository = courcesRepository;
         }
 
         public IEnumerable<T> GetAll<T>()
         {
-            return this.courcesRepository.All().To<T>().ToList();
+            return this.coursesRepository.All().To<T>().ToList();
+        }
+
+        public IEnumerable<T> GetAll<T>(int pageNumber, int itemsPerPage)
+        {
+            var courses = this.coursesRepository.AllAsNoTracking()
+
+                // .OrderByDescending(x => x.Id)
+                .Skip((pageNumber - 1) * itemsPerPage).Take(itemsPerPage)
+                .To<T>().ToList();
+
+            return courses;
         }
 
         public IEnumerable<T> GetAllByTagName<T>(string tagName)
         {
-            return this.courcesRepository.All()
+            return this.coursesRepository.All()
                 .Where(c => c.Tags.Any(t => t.Tag.Name == tagName))
                 .To<T>()
                 .ToList();
@@ -33,7 +44,7 @@
 
         public T GetById<T>(int id)
         {
-            return this.courcesRepository.All()
+            return this.coursesRepository.All()
                 .Where(c => c.Id == id)
                 .To<T>()
                 .FirstOrDefault();
@@ -41,7 +52,7 @@
 
         public int GetCount()
         {
-            return this.courcesRepository.AllAsNoTracking().Count();
+            return this.coursesRepository.AllAsNoTracking().Count();
         }
     }
 }

@@ -8,6 +8,8 @@
 
         IEnumerable<T> GetAll<T>();
 
+        IEnumerable<T> GetAll<T>(int pageNumber, int itemsPerPage);
+
         IEnumerable<T> GetAllByTagName<T>(string tagName);
 
         T GetById<T>(int id);

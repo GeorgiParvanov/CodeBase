@@ -6,6 +6,7 @@
 
     public class CoursesController : BaseController
     {
+        private const int ItemsPerPage = 1;
         private readonly ICoursesService coursesService;
 
         public CoursesController(ICoursesService coursesService)
@@ -13,10 +14,21 @@
             this.coursesService = coursesService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int pageNumber)
         {
-            var courses = this.coursesService.GetAll<CoursesViewModel>();
-            var model = new CoursesListViewModel { Courses = courses };
+            if (pageNumber <= 0)
+            {
+                return this.NotFound();
+            }
+
+            var courses = this.coursesService.GetAll<CoursesViewModel>(pageNumber, ItemsPerPage);
+            var model = new CoursesListViewModel
+            {
+                Courses = courses,
+                ItemsPerPage = ItemsPerPage,
+                PageNumber = pageNumber,
+                EntitiesCount = this.coursesService.GetCount(),
+            };
 
             return this.View(model);
         }
