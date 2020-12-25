@@ -19,6 +19,7 @@
             this.userManager = userManager;
         }
 
+        [HttpGet("/Balance")]
         public async Task<IActionResult> Balance()
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -29,7 +30,7 @@
             return this.View(model);
         }
 
-        [HttpPost]
+        [HttpPost("/Balance")]
         public async Task<IActionResult> Balance(BalanceInputModel model)
         {
             var user = await this.userManager.GetUserAsync(this.User);
