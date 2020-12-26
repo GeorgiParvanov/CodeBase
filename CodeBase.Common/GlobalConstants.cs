@@ -5,5 +5,11 @@
         public const string SystemName = "CodeBase";
 
         public const string AdministratorRoleName = "Administrator";
+
+        public const string AdministratorUsername = "SuperUser";
+
+        public const string AdministratorEmail = "SuperUser@SuperUser.com";
+
+        public const string AdministratorPassword = "SuperUser";
     }
 }
