@@ -1,8 +1,10 @@
 ﻿@model CodeBase.Web.ViewModels.Courses.CoursesListViewModel
 
 @{
-    ViewData["Title"] = "Courses";
+    ViewData["Title"] = "Library";
 }
+
+<p class="text-center">My courses:</p>
 
 @foreach (var course in Model.Courses)
 {
@@ -13,18 +15,6 @@
         <div class="card-body">
             <h5 class="card-title">@course.Name</h5>
             <p class="card-text">@course.Description</p>
-
-            @if (this.User.Identity.IsAuthenticated)
-            {
-                if (!course.IsBought)
-                {
-                    <a asp-controller="Courses" asp-action="PurchaseCourse" asp-route-id="@course.Id" class="btn btn-primary">Purchase Course</a>
-                }
-            }
-            else
-            {
-                <a asp-area="Identity" asp-page="/Account/Login">To purchase a course, please login first</a>
-            }
 
             <a asp-controller="Courses" asp-action="course" asp-route-id="@course.Id" class="btn btn-primary">View Lectures</a>
         </div>

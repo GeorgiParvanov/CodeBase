@@ -10,6 +10,10 @@
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @(this.User.Identity.Name)!</a>
         </li>
+
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Library" asp-action="Library">Library</a>
+        </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Balance" asp-action="Balance">Balance</a>
         </li>

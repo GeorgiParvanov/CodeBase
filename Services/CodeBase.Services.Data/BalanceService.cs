@@ -23,7 +23,6 @@
 
             user.Balance += balanceAmount;
 
-            // TODO: test if this works
             await this.userRepository.SaveChangesAsync();
         }
 
@@ -41,7 +40,6 @@
 
             user.Balance -= balanceAmount;
 
-            // TODO: test if this works
             await this.userRepository.SaveChangesAsync();
         }
     }

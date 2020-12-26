@@ -13,15 +13,29 @@
         <div class="card-body">
             <h5 class="card-title">@course.Name</h5>
             <p class="card-text">@course.Description</p>
-            <a href="#" class="btn btn-primary">Purchase Course</a>
+
+            @if (this.User.Identity.IsAuthenticated)
+            {
+                if (!course.IsBought)
+                {
+                    <a asp-controller="Courses" asp-action="PurchaseCourse" asp-route-id="@course.Id" class="btn btn-primary">Purchase Course</a>
+                }
+            }
+            else
+            {
+                <a asp-area="Identity" asp-page="/Account/Login">To purchase a course, please login first</a>
+            }
+
             <a asp-controller="Courses" asp-action="course" asp-route-id="@course.Id" class="btn btn-primary">View Lectures</a>
         </div>
         <div class="card-footer text-muted">
             @foreach (var tag in course.Tags)
             {
-                <a asp-controller="Courses" asp-action="index" asp-route-id="@tag.Name">@tag.Name</a>
+                <a asp-controller="Courses" asp-action="ByTag" asp-route-name="@tag.Name">@tag.Name</a>
             }
         </div>
     </div>
 }
 
+<hr />
+<partial name="_PagingPartial" model="@Model" />

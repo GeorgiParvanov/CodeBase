@@ -77,6 +77,7 @@
             services.AddTransient<ICommentsService, CommentsService>();
             services.AddTransient<IVotesService, VotesService>();
             services.AddTransient<IBalanceService, BalanceService>();
+            services.AddTransient<ILibraryService, LibraryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
