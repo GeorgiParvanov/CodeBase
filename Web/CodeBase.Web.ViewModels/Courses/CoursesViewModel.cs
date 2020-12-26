@@ -1,6 +1,7 @@
 ﻿namespace CodeBase.Web.ViewModels.Courses
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using AutoMapper;
     using CodeBase.Data.Common.Enums;
@@ -20,24 +21,28 @@
 
         public decimal Price { get; set; }
 
-        public bool IsBought { get; set; }
+        public string UserId { get; set; }
+
+        public bool IsBought => this.Users.Any(u => u.UserId == this.UserId);
 
         // TODO: Difficulty comes from CodeBase.Data.Common.Enums - should I move those enums to CodeBase.Common ???
         public Difficulty Difficulty { get; set; }
 
-        // TODO: This has to be am IEnumerable collection of TagViewModels after I change the bd ???
         public virtual IEnumerable<TagViewModel> Tags { get; set; }
 
         public virtual CheatsheetViewModel Cheatsheet { get; set; }
 
         public virtual IEnumerable<LectureViewModel> Lectures { get; set; }
 
+        public virtual IEnumerable<UserCourseViewModel> Users { get; set; }
+
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<CourseTag, TagViewModel>()
                 .ForMember(t => t.Name, opt => opt.MapFrom(ct => ct.Tag.Name));
 
-                // .ReverseMap(); TODO:
+            // configuration.CreateMap<UserCourse, UserCourseViewModel>()
+            //    .ForMember(ucvm => ucvm.UserId, opt => opt.MapFrom(uc => uc.ApplicationUser.Id));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace CodeBase.Services.Data.Contracts
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface ICoursesService
     {
@@ -13,5 +14,9 @@
         IEnumerable<T> GetAllByTagName<T>(string tagName);
 
         T GetById<T>(int id);
+
+        decimal GetBalanceAmount(int courseId);
+
+        Task AddUserToCourse(int courseId, string userId);
     }
 }

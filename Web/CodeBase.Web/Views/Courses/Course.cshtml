@@ -5,7 +5,19 @@
 }
 
 <div>Name of the course: @Model.Name</div>
-<a asp-controller="Courses" asp-action="Index">Back to courses</a>
+<a asp-controller="Courses" asp-action="Index" asp-route-pageNumber="1">Back to courses</a>
+
+@if (!Model.IsBought)
+{
+    <div class="row justify-content-center">
+        <a asp-controller="Courses" asp-action="PurchaseCourse" asp-route-id="@Model.Id" class="btn btn-primary col-md-4">Purchase Course</a>
+    </div>
+}
+
+@if (this.TempData.ContainsKey("Message"))
+{
+    <div class="alert alert-success">@this.TempData["Message"]</div>
+}
 
 @foreach (var lecture in Model.Lectures)
 {
@@ -16,10 +28,16 @@
         <div class="card-body">
             <h5 class="card-title">@lecture.Name</h5>
             <p class="card-text">@lecture.Content</p>
-            <a href="#" class="btn btn-primary">Purchase Course</a>
         </div>
         <div class="card-footer text-muted">
-            <a asp-controller="Lectures" asp-action="Lecture" asp-route-id="@lecture.Id">Open Lecture</a>
+            @if (Model.IsBought)
+            {
+                <a asp-controller="Lectures" asp-action="Lecture" asp-route-id="@lecture.Id">Open Lecture</a>
+            }
+            else
+            {
+                <strong>To open a lecture, please purchase the course first.</strong>
+            }
         </div>
     </div>
 }
