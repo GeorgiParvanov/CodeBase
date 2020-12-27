@@ -21,7 +21,7 @@
         {
             var user = new ApplicationUser
             {
-                UserName = GlobalConstants.AdministratorUsername,
+                UserName = GlobalConstants.AdministratorEmail,
                 Email = GlobalConstants.AdministratorEmail,
                 EmailConfirmed = true,
             };
