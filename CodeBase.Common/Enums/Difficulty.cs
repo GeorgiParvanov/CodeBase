@@ -1,4 +1,4 @@
-﻿namespace CodeBase.Data.Common.Enums
+﻿namespace CodeBase.Common.Enums
 {
     public enum Difficulty
     {

@@ -4,7 +4,7 @@
     using System.Linq;
 
     using AutoMapper;
-    using CodeBase.Data.Common.Enums;
+    using CodeBase.Common.Enums;
     using CodeBase.Data.Models;
     using CodeBase.Services.Mapping;
     using CodeBase.Web.ViewModels.Cheatsheet;
@@ -25,7 +25,6 @@
 
         public bool IsBought => this.Users.Any(u => u.UserId == this.UserId);
 
-        // TODO: Difficulty comes from CodeBase.Data.Common.Enums - should I move those enums to CodeBase.Common ???
         public Difficulty Difficulty { get; set; }
 
         public virtual IEnumerable<TagViewModel> Tags { get; set; }

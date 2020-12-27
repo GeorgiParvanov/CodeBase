@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CodeBase.Common\CodeBase.Common.csproj" />
     <ProjectReference Include="..\..\Data\CodeBase.Data.Models\CodeBase.Data.Models.csproj" />
     <ProjectReference Include="..\..\Services\CodeBase.Services.Mapping\CodeBase.Services.Mapping.csproj" />
   </ItemGroup>

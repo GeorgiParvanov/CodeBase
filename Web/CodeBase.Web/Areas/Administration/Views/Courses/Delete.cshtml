@@ -1,4 +1,4 @@
-﻿@model CodeBase.Data.Models.Course
+﻿@model CodeBase.Web.ViewModels.Administration.Courses.CourseViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -65,6 +65,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-controller="Courses" asp-action="Index" asp-route-pageNumber="1">Back to List</a>
     </form>
 </div>

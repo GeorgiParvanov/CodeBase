@@ -1,4 +1,4 @@
-﻿@model CodeBase.Data.Models.Course
+﻿@model CodeBase.Web.ViewModels.Administration.Courses.CourseViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -63,5 +63,5 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Courses" asp-action="Index" asp-route-pageNumber="1">Back to List</a>
 </div>

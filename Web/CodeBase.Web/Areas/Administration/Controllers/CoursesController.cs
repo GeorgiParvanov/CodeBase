@@ -6,74 +6,94 @@
     using CodeBase.Data;
     using CodeBase.Data.Common.Repositories;
     using CodeBase.Data.Models;
+    using CodeBase.Services.Data.Contracts;
+    using CodeBase.Web.ViewModels.Administration.Courses;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
     public class CoursesController : AdministrationController
     {
+        private const int ItemsPerPage = 2;
         private readonly IDeletableEntityRepository<Course> courseRepository;
+        private readonly ICoursesService coursesService;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public CoursesController(IDeletableEntityRepository<Course> courseRepository)
+        public CoursesController(
+            IDeletableEntityRepository<Course> courseRepository,
+            ICoursesService coursesService,
+            UserManager<ApplicationUser> userManager)
         {
             this.courseRepository = courseRepository;
+            this.coursesService = coursesService;
+            this.userManager = userManager;
         }
 
-        // GET: Administration/Courses
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int pageNumber)
         {
-            return this.View(await this.courseRepository.AllWithDeleted().ToListAsync());
+            if (pageNumber <= 0)
+            {
+                return this.NotFound();
+            }
+
+            var courses = this.coursesService.GetAllWithDeleted<CourseViewModel>(pageNumber, ItemsPerPage);
+
+            var model = new CoursesListViewModel
+            {
+                Courses = courses,
+                ItemsPerPage = ItemsPerPage,
+                PageNumber = pageNumber,
+                EntitiesCount = this.coursesService.GetCountWithDeleted(),
+            };
+
+            return this.View(model);
         }
 
-        // GET: Administration/Courses/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var course = await this.courseRepository.AllWithDeleted()
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (course == null)
+            var model = this.coursesService.GetByIdWithDeleted<CourseViewModel>((int)id);
+
+            if (model == null)
             {
                 return this.NotFound();
             }
 
-            return this.View(course);
+            return this.View(model);
         }
 
-        // GET: Administration/Courses/Create
         public IActionResult Create()
         {
             return this.View();
         }
 
-        // POST: Administration/Courses/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description,Price,Difficulty,IsDeleted,DeletedOn,Id,CreatedOn,ModifiedOn")] Course course)
+        public async Task<IActionResult> Create(CourseInputModel input)
         {
             if (this.ModelState.IsValid)
             {
-                await this.courseRepository.AddAsync(course);
-                await this.courseRepository.SaveChangesAsync();
-                return this.RedirectToAction(nameof(this.Index));
+                await this.coursesService.Create(input);
+
+                return this.RedirectToAction(nameof(this.Index), new { pageNumber = 1 });
             }
 
-            return this.View(course);
+            return this.View(input);
         }
 
-        // GET: Administration/Courses/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var course = this.courseRepository.AllWithDeleted().FirstOrDefault(c => c.Id == id);
+            var course = this.coursesService.GetByIdWithDeleted<CourseViewModel>((int)id);
+
             if (course == null)
             {
                 return this.NotFound();
@@ -82,76 +102,55 @@
             return this.View(course);
         }
 
-        // POST: Administration/Courses/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Description,Price,Difficulty,IsDeleted,DeletedOn,Id,CreatedOn,ModifiedOn")] Course course)
+        public async Task<IActionResult> Edit(int id, CourseInputModel input)
         {
-            if (id != course.Id)
+            if (id != input.Id)
             {
                 return this.NotFound();
             }
 
             if (this.ModelState.IsValid)
             {
-                try
-                {
-                    this.courseRepository.Update(course);
-                    await this.courseRepository.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!this.CourseExists(course.Id))
-                    {
-                        return this.NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await this.coursesService.UpdateAsync(id, input);
 
-                return this.RedirectToAction(nameof(this.Index));
+                return this.RedirectToAction(nameof(this.Index), new { pageNumber = 1 });
             }
 
-            return this.View(course);
+            return this.View(input);
         }
 
-        // GET: Administration/Courses/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var course = await this.courseRepository.AllWithDeleted()
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (course == null)
+            var model = this.coursesService.GetByIdWithDeleted<CourseViewModel>((int)id);
+
+            if (model == null)
             {
                 return this.NotFound();
             }
 
-            return this.View(course);
+            return this.View(model);
         }
 
-        // POST: Administration/Courses/Delete/5
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var course = this.courseRepository.AllWithDeleted().FirstOrDefault(c => c.Id == id);
-            this.courseRepository.Delete(course);
-            await this.courseRepository.SaveChangesAsync();
-            return this.RedirectToAction(nameof(this.Index));
+            await this.coursesService.DeleteAsync(id);
+
+            return this.RedirectToAction(nameof(this.Index), new { pageNumber = 1 });
         }
 
         private bool CourseExists(int id)
         {
-            return this.courseRepository.All().Any(e => e.Id == id);
+            return this.coursesService.CourseExist(id);
         }
     }
 }

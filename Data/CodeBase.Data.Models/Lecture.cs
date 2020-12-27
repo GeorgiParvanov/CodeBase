@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    using CodeBase.Data.Common.Enums;
+    using CodeBase.Common.Enums;
     using CodeBase.Data.Common.Models;
 
     public class Lecture : BaseDeletableModel<int>

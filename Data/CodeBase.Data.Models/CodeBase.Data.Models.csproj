@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CodeBase.Common\CodeBase.Common.csproj" />
     <ProjectReference Include="..\CodeBase.Data.Common\CodeBase.Data.Common.csproj" />
   </ItemGroup>
   

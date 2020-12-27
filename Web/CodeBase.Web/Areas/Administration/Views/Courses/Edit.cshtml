@@ -1,4 +1,4 @@
-﻿@model CodeBase.Data.Models.Course
+﻿@model CodeBase.Web.ViewModels.Administration.Courses.CourseViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -39,22 +39,6 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="DeletedOn" class="control-label"></label>
-                <input asp-for="DeletedOn" class="form-control" />
-                <span asp-validation-for="DeletedOn" class="text-danger"></span>
-            </div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label"></label>
-                <input asp-for="CreatedOn" class="form-control" />
-                <span asp-validation-for="CreatedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedOn" class="control-label"></label>
-                <input asp-for="ModifiedOn" class="form-control" />
-                <span asp-validation-for="ModifiedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -62,7 +46,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Courses" asp-action="Index" asp-route-pageNumber="1">Back to List</a>
 </div>
 
 @section Scripts {

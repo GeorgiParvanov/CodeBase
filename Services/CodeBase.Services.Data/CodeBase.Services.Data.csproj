@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\CodeBase.Data.Common\CodeBase.Data.Common.csproj" />
     <ProjectReference Include="..\..\Data\CodeBase.Data.Models\CodeBase.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Web\CodeBase.Web.ViewModels\CodeBase.Web.ViewModels.csproj" />
     <ProjectReference Include="..\CodeBase.Services.Mapping\CodeBase.Services.Mapping.csproj" />
   </ItemGroup>
 

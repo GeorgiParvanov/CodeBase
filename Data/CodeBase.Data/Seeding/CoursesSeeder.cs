@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using CodeBase.Data.Common.Enums;
+    using CodeBase.Common.Enums;
     using CodeBase.Data.Models;
 
     internal class CoursesSeeder : ISeeder
