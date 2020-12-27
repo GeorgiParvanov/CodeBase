@@ -5,6 +5,7 @@
     using System.Linq;
 
     using AutoMapper;
+    using CodeBase.Common.Enums;
     using CodeBase.Data.Models;
     using CodeBase.Services.Mapping;
     using Ganss.XSS;
@@ -25,8 +26,8 @@
 
         public DateTime CreatedOn { get; set; }
 
-        // TODO: move Difficulty enum to CodeBase.Common and uncomment Difficulty prop here
-        // public Difficulty Difficulty { get; set; }
+        public Difficulty Difficulty { get; set; }
+
         public TimeSpan ReadTime { get; set; }
 
         public virtual IEnumerable<LectureCommentViewModel> Comments { get; set; }

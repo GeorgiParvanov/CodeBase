@@ -5,162 +5,154 @@
 
     using CodeBase.Data.Common.Repositories;
     using CodeBase.Data.Models;
+    using CodeBase.Services.Data.Contracts;
+    using CodeBase.Web.ViewModels.Administration.Courses;
+    using CodeBase.Web.ViewModels.Administration.Lectures;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
 
     public class LecturesController : AdministrationController
     {
+        private const int ItemsPerPage = 2;
         private readonly IDeletableEntityRepository<Lecture> lectureRepository;
         private readonly IDeletableEntityRepository<Course> courseRepository;
+        private readonly ILecturesService lecturesService;
+        private readonly ICoursesService coursesService;
 
-        public LecturesController(IDeletableEntityRepository<Lecture> lectureRepository, IDeletableEntityRepository<Course> courseRepository)
+        public LecturesController(
+            IDeletableEntityRepository<Lecture> lectureRepository,
+            IDeletableEntityRepository<Course> courseRepository,
+            ILecturesService lecturesService,
+            ICoursesService coursesService)
         {
             this.lectureRepository = lectureRepository;
             this.courseRepository = courseRepository;
+            this.lecturesService = lecturesService;
+            this.coursesService = coursesService;
         }
 
-        // GET: Administration/Lectures
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int pageNumber)
         {
-            var applicationDbContext = this.lectureRepository.AllWithDeleted().Include(l => l.Course);
-            return this.View(await applicationDbContext.ToListAsync());
+            if (pageNumber <= 0)
+            {
+                return this.NotFound();
+            }
+
+            var lectures = this.lecturesService.GetAllWithDeleted<LectureViewModel>(pageNumber, ItemsPerPage);
+
+            var model = new LectureListViewModel
+            {
+                Lectures = lectures,
+                ItemsPerPage = ItemsPerPage,
+                PageNumber = pageNumber,
+                EntitiesCount = this.lecturesService.GetCountWithDeleted(),
+            };
+
+            return this.View(model);
         }
 
-        // GET: Administration/Lectures/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var lecture = await this.lectureRepository.AllWithDeleted()
-                .Include(l => l.Course)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (lecture == null)
+            var model = this.lecturesService.GetByIdWithDeleted<LectureViewModel>((int)id);
+            if (model == null)
             {
                 return this.NotFound();
             }
 
-            return this.View(lecture);
+            return this.View(model);
         }
 
-        // GET: Administration/Lectures/Create
         public IActionResult Create()
         {
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.All(), "Id", "Id");
+            this.ViewData["SeeSharpCourses"] = new SelectList(this.coursesService.GetAll<CourseViewModel>(), "Id", "Name");
             return this.View();
         }
 
-        // POST: Administration/Lectures/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Content,Difficulty,ReadTime,CourseId,IsDeleted,DeletedOn,Id,CreatedOn,ModifiedOn")] Lecture lecture)
+        public async Task<IActionResult> Create(LectureInputModel input)
         {
             if (this.ModelState.IsValid)
             {
-                await this.lectureRepository.AddAsync(lecture);
-                await this.lectureRepository.SaveChangesAsync();
-                return this.RedirectToAction(nameof(this.Index));
+                await this.lecturesService.CreateAsync(input);
+                return this.RedirectToAction(nameof(this.Index), new { pageNumber = 1 });
             }
 
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.All(), "Id", "Id", lecture.CourseId);
-            return this.View(lecture);
+            this.ViewData["SeeSharpCourses"] = new SelectList(this.coursesService.GetAll<CourseViewModel>(), "Id", "Name", input.CourseId);
+            return this.View(input);
         }
 
-        // GET: Administration/Lectures/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var lecture = this.lectureRepository.AllWithDeleted().FirstOrDefault(l => l.Id == id);
-            if (lecture == null)
+            var model = this.lecturesService.GetByIdWithDeleted<LectureInputModel>((int)id);
+            if (model == null)
             {
                 return this.NotFound();
             }
 
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.All(), "Id", "Id", lecture.CourseId);
-            return this.View(lecture);
+            this.ViewData["SeeSharpCourses"] = new SelectList(this.coursesService.GetAll<CourseViewModel>(), "Id", "Name", model.CourseName);
+            return this.View(model);
         }
 
-        // POST: Administration/Lectures/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Content,Difficulty,ReadTime,CourseId,IsDeleted,DeletedOn,Id,CreatedOn,ModifiedOn")] Lecture lecture)
+        public async Task<IActionResult> Edit(int id, LectureInputModel input)
         {
-            if (id != lecture.Id)
+            if (id != input.Id)
             {
                 return this.NotFound();
             }
 
             if (this.ModelState.IsValid)
             {
-                try
-                {
-                    this.lectureRepository.Update(lecture);
-                    await this.lectureRepository.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!this.LectureExists(lecture.Id))
-                    {
-                        return this.NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await this.lecturesService.UpdateAsync(id, input);
 
-                return this.RedirectToAction(nameof(this.Index));
+                return this.RedirectToAction(nameof(this.Index), new { pageNumber = 1 });
             }
 
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.All(), "Id", "Id", lecture.CourseId);
-            return this.View(lecture);
+            this.ViewData["SeeSharpCourses"] = new SelectList(this.courseRepository.All(), "Id", "Name", input.CourseName);
+            return this.View(input);
         }
 
-        // GET: Administration/Lectures/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var lecture = await this.lectureRepository.AllWithDeleted()
-                .Include(l => l.Course)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (lecture == null)
+            var model = this.lecturesService.GetByIdWithDeleted<LectureViewModel>((int)id);
+            if (model == null)
             {
                 return this.NotFound();
             }
 
-            return this.View(lecture);
+            return this.View(model);
         }
 
-        // POST: Administration/Lectures/Delete/5
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var lecture = this.lectureRepository.AllWithDeleted().FirstOrDefault(l => l.Id == id);
-            this.lectureRepository.Delete(lecture);
-            await this.lectureRepository.SaveChangesAsync();
-            return this.RedirectToAction(nameof(this.Index));
+            await this.lecturesService.DeleteAsync(id);
+            return this.RedirectToAction(nameof(this.Index), new { pageNumber = 1 });
         }
 
         private bool LectureExists(int id)
         {
-            return this.lectureRepository.AllWithDeleted().Any(e => e.Id == id);
+            return this.lecturesService.LectureExist(id);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace CodeBase.Web.ViewModels.Lectures
+﻿namespace CodeBase.Web.ViewModels.Administration.Lectures
 {
     using System.Collections.Generic;
 
