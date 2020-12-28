@@ -27,8 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Data\CodeBase.Data.Common\CodeBase.Data.Common.csproj" />
+    <ProjectReference Include="..\..\Data\CodeBase.Data.Models\CodeBase.Data.Models.csproj" />
     <ProjectReference Include="..\..\Data\CodeBase.Data\CodeBase.Data.csproj" />
     <ProjectReference Include="..\..\Services\CodeBase.Services.Data\CodeBase.Services.Data.csproj" />
+    <ProjectReference Include="..\..\Services\CodeBase.Services\CodeBase.Services.csproj" />
   </ItemGroup>
 
 </Project>

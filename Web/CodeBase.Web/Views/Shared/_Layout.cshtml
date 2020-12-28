@@ -21,8 +21,22 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
-                        @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
-                        {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Courses" asp-action="Index" asp-route-pageNumber="1">Courses</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+        {
+            <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <div class="container justify-content-center">
+                    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                        <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Administration" asp-controller="UserCourses" asp-action="Index">UserCourses</a>
                             </li>
@@ -41,20 +55,11 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Administration" asp-controller="Cheatsheets" asp-action="Index">Cheatsheet</a>
                             </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Courses" asp-action="Index" asp-route-pageNumber="1">Courses</a>
-                            </li>
-                        }
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        }
     </header>
 
     <div class="container">

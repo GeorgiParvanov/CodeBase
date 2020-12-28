@@ -39,13 +39,6 @@
                 .To<T>()
                 .ToList();
 
-            // var courses = this.userRepositoty.All()
-            //    .Where(u => u.Id == userId)
-            //    .Select(u => u.Courses.Select(uc => uc.Course))
-            //    .Skip((pageNumber - 1) * itemsPerPage)
-            //    .Take(itemsPerPage)
-            //    .To<T>()
-            //    .ToList();
             return courses;
         }
     }

@@ -9,7 +9,6 @@
     using CodeBase.Data.Models;
     using CodeBase.Services.Data.Contracts;
     using CodeBase.Services.Mapping;
-    using CodeBase.Web.ViewModels.Administration.Courses;
     using CodeBase.Web.ViewModels.Administration.Lectures;
     using Microsoft.EntityFrameworkCore;
 
