@@ -2,6 +2,7 @@
 {
     using CodeBase.Services.Data.Contracts;
     using CodeBase.Web.ViewModels.Lectures;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class LecturesController : BaseController
@@ -13,6 +14,7 @@
             this.lecturesService = lecturesService;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             var lectures = this.lecturesService.GetAll<LectureViewModel>();
@@ -21,6 +23,7 @@
             return this.View(model);
         }
 
+        [Authorize]
         public IActionResult Lecture(int id)
         {
             var model = this.lecturesService.GetById<LectureViewModel>(id);

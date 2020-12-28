@@ -5,6 +5,7 @@
     using CodeBase.Data.Models;
     using CodeBase.Services.Data.Contracts;
     using CodeBase.Web.ViewModels.Courses;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
@@ -51,6 +52,7 @@
             return this.View(model);
         }
 
+        // TODO: pagination
         public IActionResult ByTag(string name)
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -76,6 +78,7 @@
             return this.View(model);
         }
 
+        [Authorize]
         public async Task<IActionResult> PurchaseCourse(int id)
         {
             var userId = this.userManager.GetUserId(this.User);

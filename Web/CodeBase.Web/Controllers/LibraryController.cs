@@ -5,6 +5,7 @@
     using CodeBase.Data.Models;
     using CodeBase.Services.Data.Contracts;
     using CodeBase.Web.ViewModels.Courses;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,7 @@
             this.libraryService = libraryService;
         }
 
+        [Authorize]
         [HttpGet("/Library")]
         public IActionResult Library(int pageNumber = 1)
         {
