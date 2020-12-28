@@ -4,6 +4,23 @@
     ViewData["Title"] = "Cheatsheet";
 }
 
-<div>@Model.Content</div>
+<a class="mb-4 pb-4" asp-controller="Courses" asp-action="Course" asp-route-id="@Model.CourseId">Go back to course</a>
 
-<a asp-controller="Courses" asp-action="Course" asp-route-id="@Model.CourseId">Go back to course</a>
+<div class="container-fluid mt-100">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="media flex-wrap w-100 align-items-center">
+                        <p>This is the most important content of all lectures gathered in one place.</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <article>
+                        @Model.Content
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

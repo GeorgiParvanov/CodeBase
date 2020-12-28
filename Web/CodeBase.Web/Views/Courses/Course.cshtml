@@ -4,24 +4,24 @@
     ViewData["Title"] = Model.Name;
 }
 
-<div>Name of the course: @Model.Name</div>
-<a asp-controller="Courses" asp-action="Index" asp-route-pageNumber="1">Back to courses</a>
-
-@if (!Model.IsBought)
-{
-    <div class="row justify-content-center">
-        <a asp-controller="Courses" asp-action="PurchaseCourse" asp-route-id="@Model.Id" class="btn btn-primary col-md-4">Purchase Course: @Model.Price bgn</a>
-    </div>
-}
-
 @if (this.TempData.ContainsKey("Message"))
 {
     <div class="alert alert-success">@this.TempData["Message"]</div>
 }
 
-@if (Model.IsBought)
+<a asp-controller="Courses" asp-action="Index" asp-route-pageNumber="1">Back to courses</a>
+<h1 class="row justify-content-center mb-4">@Model.Name</h1>
+
+@if (!Model.IsBought)
 {
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mb-4">
+        <a asp-controller="Courses" asp-action="PurchaseCourse" asp-route-id="@Model.Id" class="btn btn-primary col-md-4">Purchase Course: @Model.Price bgn</a>
+    </div>
+}
+
+@if (Model.IsBought && Model.Cheatsheet != null)
+{
+    <div class="row justify-content-center mb-4">
         <a asp-controller="Cheatsheet" asp-action="Index" asp-route-id="@Model.Cheatsheet.Id" class="btn btn-primary col-md-4">Open this course's cheatsheet</a>
     </div>
 }
@@ -30,11 +30,10 @@
 {
     <div class="card text-center">
         <div class="card-header">
-            @lecture.ReadTime
+            Time to read: @lecture.ReadTime
         </div>
         <div class="card-body">
             <h5 class="card-title">@lecture.Name</h5>
-            <p class="card-text">@lecture.Content</p>
         </div>
         <div class="card-footer text-muted">
             @if (Model.IsBought)
