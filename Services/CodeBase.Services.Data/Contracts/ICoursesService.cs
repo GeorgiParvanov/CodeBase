@@ -19,6 +19,8 @@
 
         IEnumerable<T> GetAllByTagName<T>(string tagName);
 
+        IEnumerable<T> GetAllByTagName<T>(string tagName, int pageNumber, int itemsPerPage);
+
         T GetById<T>(int id);
 
         T GetByIdWithDeleted<T>(int id);

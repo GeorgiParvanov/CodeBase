@@ -52,18 +52,28 @@
             return this.View(model);
         }
 
-        // TODO: pagination
-        public IActionResult ByTag(string name)
+        public IActionResult ByTag(string name, int pageNumber)
         {
+            if (pageNumber <= 0)
+            {
+                return this.NotFound();
+            }
+
             var userId = this.userManager.GetUserId(this.User);
-            var courses = this.coursesService.GetAllByTagName<CoursesViewModel>(name);
+            var courses = this.coursesService.GetAllByTagName<CoursesViewModel>(name, pageNumber, ItemsPerPage);
 
             foreach (var course in courses)
             {
                 course.UserId = userId;
             }
 
-            var model = new CoursesListViewModel { Courses = courses };
+            var model = new CoursesListViewModel
+            {
+                Courses = courses,
+                ItemsPerPage = ItemsPerPage,
+                PageNumber = pageNumber,
+                EntitiesCount = this.coursesService.GetCount(),
+            };
 
             return this.View(model);
         }
@@ -83,6 +93,14 @@
         {
             var userId = this.userManager.GetUserId(this.User);
             var balanceAmount = this.coursesService.GetBalanceAmount(id);
+
+            var user = await this.userManager.GetUserAsync(this.User);
+
+            if (user.Balance < balanceAmount)
+            {
+                this.TempData["Message"] = "Your Balance amount is too low. Please add funds to your Balance in order to purchase a course.";
+                return this.Redirect("/Balance");
+            }
 
             await this.balanceService.RemoveBalanceAmountAsync(userId, balanceAmount);
             await this.coursesService.AddUserToCourse(id, userId);

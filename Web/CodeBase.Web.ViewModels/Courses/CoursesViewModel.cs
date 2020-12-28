@@ -39,9 +39,6 @@
         {
             configuration.CreateMap<CourseTag, TagViewModel>()
                 .ForMember(t => t.Name, opt => opt.MapFrom(ct => ct.Tag.Name));
-
-            // configuration.CreateMap<UserCourse, UserCourseViewModel>()
-            //    .ForMember(ucvm => ucvm.UserId, opt => opt.MapFrom(uc => uc.ApplicationUser.Id));
         }
     }
 }

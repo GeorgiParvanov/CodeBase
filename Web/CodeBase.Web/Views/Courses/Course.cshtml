@@ -19,6 +19,13 @@
     <div class="alert alert-success">@this.TempData["Message"]</div>
 }
 
+@if (Model.IsBought)
+{
+    <div class="row justify-content-center">
+        <a asp-controller="Cheatsheet" asp-action="Index" asp-route-id="@Model.Cheatsheet.Id" class="btn btn-primary col-md-4">Open this course's cheatsheet</a>
+    </div>
+}
+
 @foreach (var lecture in Model.Lectures)
 {
     <div class="card text-center">

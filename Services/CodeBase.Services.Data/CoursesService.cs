@@ -135,5 +135,14 @@
         {
             return this.coursesRepository.AllWithDeleted().Any(e => e.Id == id);
         }
+
+        public IEnumerable<T> GetAllByTagName<T>(string tagName, int pageNumber, int itemsPerPage)
+        {
+            return this.coursesRepository.All()
+                .Where(c => c.Tags.Any(t => t.Tag.Name == tagName))
+                .Skip((pageNumber - 1) * itemsPerPage).Take(itemsPerPage)
+                .To<T>()
+                .ToList();
+        }
     }
 }
