@@ -1,5 +1,7 @@
 ﻿namespace CodeBase.Web.ViewModels.Administration.Lectures
 {
+    using System.ComponentModel.DataAnnotations;
+
     using AutoMapper;
     using CodeBase.Common.Enums;
     using CodeBase.Data.Models;
@@ -9,8 +11,11 @@
     {
         public int Id { get; set; }
 
+        [Required]
+        [StringLength(50, ErrorMessage = "{0} cannot be more than {1} symbols.")]
         public string Name { get; set; }
 
+        [Required]
         public string Content { get; set; }
 
         public Difficulty Difficulty { get; set; }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     using CodeBase.Common.Enums;
     using CodeBase.Data.Common.Models;
@@ -14,10 +15,14 @@
             this.Votes = new HashSet<Vote>();
         }
 
+        [Required]
+        [StringLength(50)]
         public string Name { get; set; }
 
+        [Required]
         public string Content { get; set; }
 
+        [Required]
         public Difficulty Difficulty { get; set; }
 
         public TimeSpan ReadTime { get; set; }

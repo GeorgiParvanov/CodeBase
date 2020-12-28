@@ -27,7 +27,7 @@
             var user = await this.userManager.GetUserAsync(this.User);
             var userId = user.Id;
 
-            var model = this.balanceService.GetBalance<BalanceViewModel>(userId);
+            var model = this.balanceService.GetBalance<BalanceInputModel>(userId);
 
             return this.View(model);
         }
@@ -36,6 +36,11 @@
         [HttpPost("/Balance")]
         public async Task<IActionResult> Balance(BalanceInputModel model)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
             var user = await this.userManager.GetUserAsync(this.User);
             var userId = user.Id;
 

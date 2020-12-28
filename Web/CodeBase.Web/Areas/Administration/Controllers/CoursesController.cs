@@ -92,7 +92,7 @@
                 return this.NotFound();
             }
 
-            var course = this.coursesService.GetByIdWithDeleted<CourseViewModel>((int)id);
+            var course = this.coursesService.GetByIdWithDeleted<CourseInputModel>((int)id);
 
             if (course == null)
             {

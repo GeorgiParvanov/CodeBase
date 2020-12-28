@@ -17,15 +17,9 @@ namespace CodeBase.Data.Models
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
             this.Courses = new HashSet<UserCourse>();
-
-            // TODO: this.Comments = new HashSet<Comment>();
         }
 
         public decimal Balance { get; set; }
-
-        public virtual ICollection<UserCourse> Courses { get; set; }
-
-        // TODO: public virtual ICollection<Comment> Comments { get; set; }
 
         // Audit info
         public DateTime CreatedOn { get; set; }
@@ -42,5 +36,7 @@ namespace CodeBase.Data.Models
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
 
         public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
+
+        public virtual ICollection<UserCourse> Courses { get; set; }
     }
 }

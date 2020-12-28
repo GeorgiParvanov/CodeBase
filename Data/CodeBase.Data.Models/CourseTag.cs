@@ -8,7 +8,7 @@
 
         public virtual Course Course { get; set; }
 
-        public string TagId { get; set; }
+        public int TagId { get; set; }
 
         public virtual Tag Tag { get; set; }
     }
