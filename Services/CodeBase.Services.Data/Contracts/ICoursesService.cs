@@ -9,6 +9,8 @@
     {
         int GetCount();
 
+        int GetCountByTagName(string name);
+
         int GetCountWithDeleted();
 
         IEnumerable<T> GetAll<T>();

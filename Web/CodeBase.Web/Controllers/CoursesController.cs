@@ -11,7 +11,8 @@
 
     public class CoursesController : BaseController
     {
-        private const int ItemsPerPage = 1;
+        private const int ByTagItemsPerPage = 6;
+        private const int IndexItemsPerPage = 1;
         private readonly ICoursesService coursesService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IBalanceService balanceService;
@@ -34,7 +35,7 @@
             }
 
             var userId = this.userManager.GetUserId(this.User);
-            var courses = this.coursesService.GetAll<CoursesViewModel>(pageNumber, ItemsPerPage);
+            var courses = this.coursesService.GetAll<CoursesViewModel>(pageNumber, IndexItemsPerPage);
 
             foreach (var course in courses)
             {
@@ -44,7 +45,7 @@
             var model = new CoursesListViewModel
             {
                 Courses = courses,
-                ItemsPerPage = ItemsPerPage,
+                ItemsPerPage = IndexItemsPerPage,
                 PageNumber = pageNumber,
                 EntitiesCount = this.coursesService.GetCount(),
             };
@@ -60,7 +61,7 @@
             }
 
             var userId = this.userManager.GetUserId(this.User);
-            var courses = this.coursesService.GetAllByTagName<CoursesViewModel>(name, pageNumber, ItemsPerPage);
+            var courses = this.coursesService.GetAllByTagName<CoursesViewModel>(name, pageNumber, ByTagItemsPerPage);
 
             foreach (var course in courses)
             {
@@ -70,9 +71,9 @@
             var model = new CoursesListViewModel
             {
                 Courses = courses,
-                ItemsPerPage = ItemsPerPage,
+                ItemsPerPage = ByTagItemsPerPage,
                 PageNumber = pageNumber,
-                EntitiesCount = this.coursesService.GetCount(),
+                EntitiesCount = this.coursesService.GetCountByTagName(name),
             };
 
             return this.View(model);

@@ -144,5 +144,10 @@
                 .To<T>()
                 .ToList();
         }
+
+        public int GetCountByTagName(string name)
+        {
+            return this.coursesRepository.All().Where(c => c.Tags.Any(ct => ct.Tag.Name == name)).ToList().Count();
+        }
     }
 }
