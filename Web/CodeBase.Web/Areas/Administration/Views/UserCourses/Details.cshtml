@@ -1,4 +1,4 @@
-﻿@model CodeBase.Data.Models.UserCourse
+﻿@model CodeBase.Web.ViewModels.Administration.UserCourses.UserCourseViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -12,10 +12,10 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Course)
+            Course
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Course.Id)
+            @Html.DisplayFor(model => model.CourseName)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.UserId)

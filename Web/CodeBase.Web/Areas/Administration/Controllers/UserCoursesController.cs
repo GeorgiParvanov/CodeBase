@@ -6,6 +6,9 @@
     using CodeBase.Data;
     using CodeBase.Data.Common.Repositories;
     using CodeBase.Data.Models;
+    using CodeBase.Services.Data.Contracts;
+    using CodeBase.Web.ViewModels.Administration.Courses;
+    using CodeBase.Web.ViewModels.Administration.UserCourses;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
@@ -14,43 +17,53 @@
     {
         private readonly IDeletableEntityRepository<UserCourse> userCourseRepository;
         private readonly IDeletableEntityRepository<Course> courseRepository;
+        private readonly IUserCoursesService userCoursesService;
+        private readonly ICoursesService coursesService;
 
-        public UserCoursesController(IDeletableEntityRepository<UserCourse> userCourseRepository, IDeletableEntityRepository<Course> courseRepository)
+        public UserCoursesController(
+            IDeletableEntityRepository<UserCourse> userCourseRepository,
+            IDeletableEntityRepository<Course> courseRepository,
+            IUserCoursesService userCoursesService,
+            ICoursesService coursesService)
         {
             this.userCourseRepository = userCourseRepository;
             this.courseRepository = courseRepository;
+            this.userCoursesService = userCoursesService;
+            this.coursesService = coursesService;
         }
 
-        // GET: Administration/UserCourses
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var applicationDbContext = this.userCourseRepository.AllWithDeleted().Include(u => u.Course);
-            return this.View(await applicationDbContext.ToListAsync());
+            var userCourses = this.userCoursesService.GetAll<UserCourseViewModel>();
+
+            var model = new UserCoursesListViewModel
+            {
+                UserCourses = userCourses,
+            };
+
+            return this.View(model);
         }
 
-        // GET: Administration/UserCourses/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var userCourse = await this.userCourseRepository.AllWithDeleted()
-                .Include(u => u.Course)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (userCourse == null)
+            var model = this.userCoursesService.GetById<UserCourseViewModel>((int)id);
+
+            if (model == null)
             {
                 return this.NotFound();
             }
 
-            return this.View(userCourse);
+            return this.View(model);
         }
 
-        // GET: Administration/UserCourses/Create
         public IActionResult Create()
         {
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.AllWithDeleted(), "Id", "Id");
+            this.ViewData["CourseId"] = new SelectList(this.coursesService.GetAll<CourseViewModel>(), "Id", "Name");
             return this.View();
         }
 
@@ -59,45 +72,40 @@
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CourseId,UserId,IsDeleted,DeletedOn,Id,CreatedOn,ModifiedOn")] UserCourse userCourse)
+        public async Task<IActionResult> Create(UserCourseInputModel input)
         {
             if (this.ModelState.IsValid)
             {
-                await this.userCourseRepository.AddAsync(userCourse);
-                await this.userCourseRepository.SaveChangesAsync();
+                await this.userCoursesService.AddAsync(input);
                 return this.RedirectToAction(nameof(this.Index));
             }
 
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.AllWithDeleted(), "Id", "Id", userCourse.CourseId);
-            return this.View(userCourse);
+            this.ViewData["CourseId"] = new SelectList(this.coursesService.GetAll<CourseViewModel>(), "Id", "Name", input.CourseName);
+            return this.View(input);
         }
 
-        // GET: Administration/UserCourses/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var userCourse = this.userCourseRepository.AllWithDeleted().FirstOrDefault(uc => uc.Id == id);
+            var userCourse = this.userCoursesService.GetById<UserCourseInputModel>((int)id);
             if (userCourse == null)
             {
                 return this.NotFound();
             }
 
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.AllWithDeleted(), "Id", "Id", userCourse.CourseId);
+            this.ViewData["CourseId"] = new SelectList(this.coursesService.GetAll<CourseViewModel>(), "Id", "Name", userCourse.CourseName);
             return this.View(userCourse);
         }
 
-        // POST: Administration/UserCourses/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CourseId,UserId,IsDeleted,DeletedOn,Id,CreatedOn,ModifiedOn")] UserCourse userCourse)
+        public async Task<IActionResult> Edit(int id, UserCourseInputModel input)
         {
-            if (id != userCourse.Id)
+            if (id != input.Id)
             {
                 return this.NotFound();
             }
@@ -106,12 +114,11 @@
             {
                 try
                 {
-                    this.userCourseRepository.Update(userCourse);
-                    await this.userCourseRepository.SaveChangesAsync();
+                    await this.userCoursesService.Update(input);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!this.UserCourseExists(userCourse.Id))
+                    if (!this.UserCourseExists(input.Id))
                     {
                         return this.NotFound();
                     }
@@ -124,21 +131,18 @@
                 return this.RedirectToAction(nameof(this.Index));
             }
 
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.AllWithDeleted(), "Id", "Id", userCourse.CourseId);
-            return this.View(userCourse);
+            this.ViewData["CourseId"] = new SelectList(this.coursesService.GetAll<CourseViewModel>(), "Id", "Name", input.CourseName);
+            return this.View(input);
         }
 
-        // GET: Administration/UserCourses/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var userCourse = await this.userCourseRepository.AllWithDeleted()
-                .Include(u => u.Course)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var userCourse = this.userCoursesService.GetById<UserCourseViewModel>((int)id);
             if (userCourse == null)
             {
                 return this.NotFound();
@@ -147,21 +151,18 @@
             return this.View(userCourse);
         }
 
-        // POST: Administration/UserCourses/Delete/5
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var userCourse = this.userCourseRepository.AllWithDeleted().FirstOrDefault(uc => uc.Id == id);
-            this.userCourseRepository.Delete(userCourse);
-            await this.userCourseRepository.SaveChangesAsync();
+            await this.userCoursesService.DeleteAsync(id);
             return this.RedirectToAction(nameof(this.Index));
         }
 
         private bool UserCourseExists(int id)
         {
-            return this.userCourseRepository.AllWithDeleted().Any(e => e.Id == id);
+            return this.userCoursesService.UserCourseExists(id);
         }
     }
 }

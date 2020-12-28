@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CodeBase.Data.Models.UserCourse>
+﻿@model CodeBase.Web.ViewModels.Administration.UserCourses.UserCoursesListViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -14,31 +14,31 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Course)
+                Course
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UserId)
+                UserId
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsDeleted)
+                IsDeleted
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DeletedOn)
+                DeletedOn
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedOn)
+                CreatedOn
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModifiedOn)
+                ModifiedOn
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.UserCourses) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Course.Id)
+                @Html.DisplayFor(modelItem => item.CourseName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UserId)
