@@ -10,7 +10,7 @@
 @if (!Model.IsBought)
 {
     <div class="row justify-content-center">
-        <a asp-controller="Courses" asp-action="PurchaseCourse" asp-route-id="@Model.Id" class="btn btn-primary col-md-4">Purchase Course</a>
+        <a asp-controller="Courses" asp-action="PurchaseCourse" asp-route-id="@Model.Id" class="btn btn-primary col-md-4">Purchase Course: @Model.Price bgn</a>
     </div>
 }
 

@@ -18,7 +18,7 @@
             {
                 if (!course.IsBought)
                 {
-                    <a asp-controller="Courses" asp-action="PurchaseCourse" asp-route-id="@course.Id" class="btn btn-primary">Purchase Course</a>
+                    <a asp-controller="Courses" asp-action="PurchaseCourse" asp-route-id="@course.Id" class="btn btn-primary">Purchase Course: @course.Price bgn</a>
                 }
             }
             else
