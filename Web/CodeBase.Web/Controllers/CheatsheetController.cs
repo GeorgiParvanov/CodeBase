@@ -2,6 +2,7 @@
 {
     using CodeBase.Services.Data.Contracts;
     using CodeBase.Web.ViewModels.Cheatsheet;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class CheatsheetController : BaseController
@@ -13,6 +14,7 @@
             this.cheatsheetService = cheatsheetService;
         }
 
+        [Authorize]
         [Route("Cheatsheet/{id:int}")]
         public IActionResult Index(int id)
         {

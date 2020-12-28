@@ -5,6 +5,7 @@
     using CodeBase.Data.Models;
     using CodeBase.Services.Data.Contracts;
     using CodeBase.Web.ViewModels.Balance;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,7 @@
             this.userManager = userManager;
         }
 
+        [Authorize]
         [HttpGet("/Balance")]
         public async Task<IActionResult> Balance()
         {
@@ -30,6 +32,7 @@
             return this.View(model);
         }
 
+        [Authorize]
         [HttpPost("/Balance")]
         public async Task<IActionResult> Balance(BalanceInputModel model)
         {

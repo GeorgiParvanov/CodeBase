@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CodeBase.Data.Models.CourseTag>
+﻿@model IEnumerable<CodeBase.Data.Models.Cheatsheet>
 
 @{
     ViewData["Title"] = "Index";
@@ -14,10 +14,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Course)
+                @Html.DisplayNameFor(model => model.Content)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Tag)
+                @Html.DisplayNameFor(model => model.Course)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IsDeleted)
@@ -38,10 +38,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Course.Id)
+                @Html.DisplayFor(modelItem => item.Content)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Tag.Id)
+                @Html.DisplayFor(modelItem => item.Course.Id)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsDeleted)

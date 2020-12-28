@@ -14,17 +14,22 @@
     {
         private readonly IDeletableEntityRepository<CourseTag> courseTagRepository;
         private readonly IDeletableEntityRepository<Course> courseRepository;
+        private readonly IRepository<Tag> tagRepository;
 
-        public CourseTagsController(IDeletableEntityRepository<CourseTag> courseTagRepository, IDeletableEntityRepository<Course> courseRepository)
+        public CourseTagsController(
+            IDeletableEntityRepository<CourseTag> courseTagRepository,
+            IDeletableEntityRepository<Course> courseRepository,
+            IRepository<Tag> tagRepository)
         {
             this.courseTagRepository = courseTagRepository;
             this.courseRepository = courseRepository;
+            this.tagRepository = tagRepository;
         }
 
         // GET: Administration/CourseTags
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = this.courseTagRepository.AllWithDeleted().Include(c => c.Course);
+            var applicationDbContext = this.courseTagRepository.AllWithDeleted().Include(c => c.Course).Include(c => c.Tag);
             return this.View(await applicationDbContext.ToListAsync());
         }
 
@@ -50,7 +55,8 @@
         // GET: Administration/CourseTags/Create
         public IActionResult Create()
         {
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.AllWithDeleted(), "Id", "Id");
+            this.ViewData["CourseId"] = new SelectList(this.courseRepository.AllWithDeleted(), "Id", "Name");
+            this.ViewData["TagId"] = new SelectList(this.tagRepository.All(), "Id", "Name");
             return this.View();
         }
 
