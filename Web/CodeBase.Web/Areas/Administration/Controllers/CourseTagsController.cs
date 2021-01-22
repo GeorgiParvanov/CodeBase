@@ -6,6 +6,10 @@
     using CodeBase.Data;
     using CodeBase.Data.Common.Repositories;
     using CodeBase.Data.Models;
+    using CodeBase.Services.Data.Contracts;
+    using CodeBase.Web.ViewModels.Administration.Courses;
+    using CodeBase.Web.ViewModels.Administration.CourseTags;
+    using CodeBase.Web.ViewModels.Administration.Tags;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
@@ -15,35 +19,42 @@
         private readonly IDeletableEntityRepository<CourseTag> courseTagRepository;
         private readonly IDeletableEntityRepository<Course> courseRepository;
         private readonly IRepository<Tag> tagRepository;
+        private readonly ICourseTagsService courseTagsService;
+        private readonly ICoursesService coursesService;
+        private readonly ITagsService tagsService;
 
         public CourseTagsController(
             IDeletableEntityRepository<CourseTag> courseTagRepository,
             IDeletableEntityRepository<Course> courseRepository,
-            IRepository<Tag> tagRepository)
+            IRepository<Tag> tagRepository,
+            ICourseTagsService courseTagsService,
+            ICoursesService coursesService,
+            ITagsService tagsService)
         {
             this.courseTagRepository = courseTagRepository;
             this.courseRepository = courseRepository;
             this.tagRepository = tagRepository;
+            this.courseTagsService = courseTagsService;
+            this.coursesService = coursesService;
+            this.tagsService = tagsService;
         }
 
-        // GET: Administration/CourseTags
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var applicationDbContext = this.courseTagRepository.AllWithDeleted().Include(c => c.Course).Include(c => c.Tag);
-            return this.View(await applicationDbContext.ToListAsync());
+            var courseTags = this.courseTagsService.GetAllWithDeleted<CourseTagViewModel>();
+            var model = new CourseTagListViewModel() { CourseTags = courseTags };
+
+            return this.View(model);
         }
 
-        // GET: Administration/CourseTags/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var courseTag = await this.courseTagRepository.AllWithDeleted()
-                .Include(c => c.Course)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var courseTag = this.courseTagsService.GetByIdWithDeleted<CourseTagViewModel>((int)id);
             if (courseTag == null)
             {
                 return this.NotFound();
@@ -52,58 +63,49 @@
             return this.View(courseTag);
         }
 
-        // GET: Administration/CourseTags/Create
         public IActionResult Create()
         {
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.AllWithDeleted(), "Id", "Name");
-            this.ViewData["TagId"] = new SelectList(this.tagRepository.All(), "Id", "Name");
+            this.ViewData["CourseNames"] = new SelectList(this.coursesService.GetAllWithDeleted<CourseViewModel>(), "Id", "Name");
+            this.ViewData["TagNames"] = new SelectList(this.tagsService.GetAll<TagViewModel>(), "Id", "Name");
             return this.View();
         }
 
-        // POST: Administration/CourseTags/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CourseId,TagId,IsDeleted,DeletedOn,Id,CreatedOn,ModifiedOn")] CourseTag courseTag)
+        public async Task<IActionResult> Create(CourseTagInputModel input)
         {
             if (this.ModelState.IsValid)
             {
-                await this.courseTagRepository.AddAsync(courseTag);
-                await this.courseTagRepository.SaveChangesAsync();
+                await this.courseTagsService.Create(input);
                 return this.RedirectToAction(nameof(this.Index));
             }
 
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.AllWithDeleted(), "Id", "Id", courseTag.CourseId);
-            return this.View(courseTag);
+            this.ViewData["CourseNames"] = new SelectList(this.coursesService.GetAllWithDeleted<CourseViewModel>(), "Id", "Name", input.CourseName);
+            return this.View(input);
         }
 
-        // GET: Administration/CourseTags/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var courseTag = this.courseTagRepository.AllWithDeleted().FirstOrDefault(ct => ct.Id == id);
-            if (courseTag == null)
+            var model = this.courseTagsService.GetByIdWithDeleted<CourseTagInputModel>((int)id);
+            if (model == null)
             {
                 return this.NotFound();
             }
 
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.AllWithDeleted(), "Id", "Id", courseTag.CourseId);
-            return this.View(courseTag);
+            this.ViewData["CourseNames"] = new SelectList(this.coursesService.GetAll<CourseViewModel>(), "Id", "Name", model.CourseName);
+            return this.View(model);
         }
 
-        // POST: Administration/CourseTags/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CourseId,TagId,IsDeleted,DeletedOn,Id,CreatedOn,ModifiedOn")] CourseTag courseTag)
+        public async Task<IActionResult> Edit(int id, CourseTagInputModel input)
         {
-            if (id != courseTag.Id)
+            if (id != input.Id)
             {
                 return this.NotFound();
             }
@@ -112,12 +114,11 @@
             {
                 try
                 {
-                    this.courseTagRepository.Update(courseTag);
-                    await this.courseTagRepository.SaveChangesAsync();
+                    await this.courseTagsService.UpdateAsync(id, input);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!this.CourseTagExists(courseTag.Id))
+                    if (!this.CourseTagExists(input.Id))
                     {
                         return this.NotFound();
                     }
@@ -130,44 +131,38 @@
                 return this.RedirectToAction(nameof(this.Index));
             }
 
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.AllWithDeleted(), "Id", "Id", courseTag.CourseId);
-            return this.View(courseTag);
+            this.ViewData["CourseNames"] = new SelectList(this.coursesService.GetAll<CourseViewModel>(), "Id", "Name", input.CourseName);
+            return this.View(input);
         }
 
-        // GET: Administration/CourseTags/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var courseTag = await this.courseTagRepository.AllWithDeleted()
-                .Include(c => c.Course)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (courseTag == null)
+            var model = this.courseTagsService.GetByIdWithDeleted<CourseTagInputModel>((int)id);
+            if (model == null)
             {
                 return this.NotFound();
             }
 
-            return this.View(courseTag);
+            return this.View(model);
         }
 
-        // POST: Administration/CourseTags/Delete/5
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var courseTag = this.courseTagRepository.AllWithDeleted().FirstOrDefault(ct => ct.Id == id);
-            this.courseTagRepository.Delete(courseTag);
-            await this.courseTagRepository.SaveChangesAsync();
+            await this.courseTagsService.DeleteAsync(id);
             return this.RedirectToAction(nameof(this.Index));
         }
 
         private bool CourseTagExists(int id)
         {
-            return this.courseTagRepository.AllWithDeleted().Any(e => e.Id == id);
+            return this.courseTagsService.CourseTagExists(id);
         }
     }
 }

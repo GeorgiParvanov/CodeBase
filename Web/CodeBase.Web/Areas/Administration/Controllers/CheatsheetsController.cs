@@ -15,19 +15,13 @@
 
     public class CheatsheetsController : AdministrationController
     {
-        private readonly IDeletableEntityRepository<Cheatsheet> cheatsheetRepository;
-        private readonly IDeletableEntityRepository<Course> courseRepository;
         private readonly ICheatsheetService cheatsheetService;
         private readonly ICoursesService coursesService;
 
         public CheatsheetsController(
-            IDeletableEntityRepository<Cheatsheet> cheatsheetRepository,
-            IDeletableEntityRepository<Course> courseRepository,
             ICheatsheetService cheatsheetService,
             ICoursesService coursesService)
         {
-            this.cheatsheetRepository = cheatsheetRepository;
-            this.courseRepository = courseRepository;
             this.cheatsheetService = cheatsheetService;
             this.coursesService = coursesService;
         }

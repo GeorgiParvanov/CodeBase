@@ -1,4 +1,4 @@
-﻿@model CodeBase.Data.Models.CourseTag
+﻿@model CodeBase.Web.ViewModels.Administration.CourseTags.CourseTagInputModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -13,16 +13,16 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Course)
+            @Html.DisplayNameFor(model => model.CourseName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Course.Id)
+            @Html.DisplayFor(model => model.CourseName)
         </dd class>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TagId)
+            @Html.DisplayNameFor(model => model.TagName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TagId)
+            @Html.DisplayFor(model => model.TagName)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.IsDeleted)

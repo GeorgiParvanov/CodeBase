@@ -1,4 +1,4 @@
-﻿@model CodeBase.Data.Models.CourseTag
+﻿@model CodeBase.Web.ViewModels.Administration.CourseTags.CourseTagInputModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -14,35 +14,18 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="CourseId" class="control-label"></label>
-                <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseId"></select>
+                <label asp-for="CourseId" class="control-label">Course Name</label>
+                <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseNames"></select>
                 <span asp-validation-for="CourseId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TagId" class="control-label"></label>
-                <input asp-for="TagId" class="form-control" />
-                <span asp-validation-for="TagId" class="text-danger"></span>
+                <label asp-for="TagId" class="control-label">Tag Name</label>
+                <input asp-for="TagName" class="form-control" />
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
                 </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeletedOn" class="control-label"></label>
-                <input asp-for="DeletedOn" class="form-control" />
-                <span asp-validation-for="DeletedOn" class="text-danger"></span>
-            </div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label"></label>
-                <input asp-for="CreatedOn" class="form-control" />
-                <span asp-validation-for="CreatedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedOn" class="control-label"></label>
-                <input asp-for="ModifiedOn" class="form-control" />
-                <span asp-validation-for="ModifiedOn" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

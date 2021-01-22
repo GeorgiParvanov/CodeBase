@@ -13,12 +13,10 @@
 
     public class TagsController : AdministrationController
     {
-        private readonly IRepository<Tag> tagRepository;
         private readonly ITagsService tagsService;
 
-        public TagsController(IRepository<Tag> tagRepository, ITagsService tagsService)
+        public TagsController(ITagsService tagsService)
         {
-            this.tagRepository = tagRepository;
             this.tagsService = tagsService;
         }
 
