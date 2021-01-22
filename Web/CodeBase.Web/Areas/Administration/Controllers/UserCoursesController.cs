@@ -15,19 +15,13 @@
 
     public class UserCoursesController : AdministrationController
     {
-        private readonly IDeletableEntityRepository<UserCourse> userCourseRepository;
-        private readonly IDeletableEntityRepository<Course> courseRepository;
         private readonly IUserCoursesService userCoursesService;
         private readonly ICoursesService coursesService;
 
         public UserCoursesController(
-            IDeletableEntityRepository<UserCourse> userCourseRepository,
-            IDeletableEntityRepository<Course> courseRepository,
             IUserCoursesService userCoursesService,
             ICoursesService coursesService)
         {
-            this.userCourseRepository = userCourseRepository;
-            this.courseRepository = courseRepository;
             this.userCoursesService = userCoursesService;
             this.coursesService = coursesService;
         }

@@ -15,16 +15,13 @@
     public class CoursesController : AdministrationController
     {
         private const int ItemsPerPage = 2;
-        private readonly IDeletableEntityRepository<Course> courseRepository;
         private readonly ICoursesService coursesService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public CoursesController(
-            IDeletableEntityRepository<Course> courseRepository,
             ICoursesService coursesService,
             UserManager<ApplicationUser> userManager)
         {
-            this.courseRepository = courseRepository;
             this.coursesService = coursesService;
             this.userManager = userManager;
         }

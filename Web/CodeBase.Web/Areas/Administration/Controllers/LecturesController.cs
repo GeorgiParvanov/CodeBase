@@ -15,19 +15,13 @@
     public class LecturesController : AdministrationController
     {
         private const int ItemsPerPage = 2;
-        private readonly IDeletableEntityRepository<Lecture> lectureRepository;
-        private readonly IDeletableEntityRepository<Course> courseRepository;
         private readonly ILecturesService lecturesService;
         private readonly ICoursesService coursesService;
 
         public LecturesController(
-            IDeletableEntityRepository<Lecture> lectureRepository,
-            IDeletableEntityRepository<Course> courseRepository,
             ILecturesService lecturesService,
             ICoursesService coursesService)
         {
-            this.lectureRepository = lectureRepository;
-            this.courseRepository = courseRepository;
             this.lecturesService = lecturesService;
             this.coursesService = coursesService;
         }
@@ -121,7 +115,7 @@
                 return this.RedirectToAction(nameof(this.Index), new { pageNumber = 1 });
             }
 
-            this.ViewData["SeeSharpCourses"] = new SelectList(this.courseRepository.All(), "Id", "Name", input.CourseName);
+            this.ViewData["SeeSharpCourses"] = new SelectList(this.coursesService.GetAll<CourseViewModel>(), "Id", "Name", input.CourseName);
             return this.View(input);
         }
 
