@@ -6,90 +6,85 @@
     using CodeBase.Data;
     using CodeBase.Data.Common.Repositories;
     using CodeBase.Data.Models;
+    using CodeBase.Services.Data.Contracts;
+    using CodeBase.Web.ViewModels.Administration.Tags;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
     public class TagsController : AdministrationController
     {
         private readonly IRepository<Tag> tagRepository;
+        private readonly ITagsService tagsService;
 
-        public TagsController(IRepository<Tag> tagRepository)
+        public TagsController(IRepository<Tag> tagRepository, ITagsService tagsService)
         {
             this.tagRepository = tagRepository;
+            this.tagsService = tagsService;
         }
 
-        // GET: Administration/Tags
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return this.View(await this.tagRepository.All().ToListAsync());
+            var tags = this.tagsService.GetAll<TagViewModel>();
+            var model = new TagListViewModel() { Tags = tags };
+
+            return this.View(model);
         }
 
-        // GET: Administration/Tags/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var tag = await this.tagRepository.All()
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (tag == null)
+            var model = this.tagsService.GetById<TagViewModel>((int)id);
+            if (model == null)
             {
                 return this.NotFound();
             }
 
-            return this.View(tag);
+            return this.View(model);
         }
 
-        // GET: Administration/Tags/Create
         public IActionResult Create()
         {
             return this.View();
         }
 
-        // POST: Administration/Tags/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Id,CreatedOn,ModifiedOn")] Tag tag)
+        public async Task<IActionResult> Create(TagInputModel input)
         {
             if (this.ModelState.IsValid)
             {
-                await this.tagRepository.AddAsync(tag);
-                await this.tagRepository.SaveChangesAsync();
+                await this.tagsService.Create(input);
                 return this.RedirectToAction(nameof(this.Index));
             }
 
-            return this.View(tag);
+            return this.View(input);
         }
 
-        // GET: Administration/Tags/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var tag = this.tagRepository.All().FirstOrDefault(t => t.Id == id);
-            if (tag == null)
+            var model = this.tagsService.GetById<TagInputModel>((int)id);
+            if (model == null)
             {
                 return this.NotFound();
             }
 
-            return this.View(tag);
+            return this.View(model);
         }
 
-        // POST: Administration/Tags/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Id,CreatedOn,ModifiedOn")] Tag tag)
+        public async Task<IActionResult> Edit(int id, TagInputModel input)
         {
-            if (id != tag.Id)
+            if (id != input.Id)
             {
                 return this.NotFound();
             }
@@ -98,12 +93,11 @@
             {
                 try
                 {
-                    this.tagRepository.Update(tag);
-                    await this.tagRepository.SaveChangesAsync();
+                    await this.tagsService.UpdateAsync(id, input);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!this.TagExists(tag.Id))
+                    if (!this.TagExists(input.Id))
                     {
                         return this.NotFound();
                     }
@@ -116,19 +110,17 @@
                 return this.RedirectToAction(nameof(this.Index));
             }
 
-            return this.View(tag);
+            return this.View(input);
         }
 
-        // GET: Administration/Tags/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var tag = await this.tagRepository.All()
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var tag = this.tagsService.GetById<TagViewModel>((int)id);
             if (tag == null)
             {
                 return this.NotFound();
@@ -137,21 +129,18 @@
             return this.View(tag);
         }
 
-        // POST: Administration/Tags/Delete/5
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var tag = this.tagRepository.All().FirstOrDefault(t => t.Id == id);
-            this.tagRepository.Delete(tag);
-            await this.tagRepository.SaveChangesAsync();
+            await this.tagsService.DeleteAsync(id);
             return this.RedirectToAction(nameof(this.Index));
         }
 
         private bool TagExists(int id)
         {
-            return this.tagRepository.All().Any(e => e.Id == id);
+            return this.tagsService.TagExists(id);
         }
     }
 }

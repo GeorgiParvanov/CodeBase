@@ -1,4 +1,4 @@
-﻿@model CodeBase.Data.Models.Cheatsheet
+﻿@model CodeBase.Web.ViewModels.Administration.Cheatsheets.CheatsheetViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -7,7 +7,6 @@
 
 <h1>Delete</h1>
 
-<h3>Are you sure you want to delete this?</h3>
 <div>
     <h4>Cheatsheet</h4>
     <hr />
@@ -18,12 +17,6 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Content)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Course)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Course.Id)
-        </dd class>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.IsDeleted)
         </dt>

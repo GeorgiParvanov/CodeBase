@@ -6,6 +6,9 @@
     using CodeBase.Data;
     using CodeBase.Data.Common.Repositories;
     using CodeBase.Data.Models;
+    using CodeBase.Services.Data.Contracts;
+    using CodeBase.Web.ViewModels.Administration.Cheatsheets;
+    using CodeBase.Web.ViewModels.Administration.Courses;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
@@ -14,90 +17,93 @@
     {
         private readonly IDeletableEntityRepository<Cheatsheet> cheatsheetRepository;
         private readonly IDeletableEntityRepository<Course> courseRepository;
+        private readonly ICheatsheetService cheatsheetService;
+        private readonly ICoursesService coursesService;
 
-        public CheatsheetsController(IDeletableEntityRepository<Cheatsheet> cheatsheetRepository, IDeletableEntityRepository<Course> courseRepository)
+        public CheatsheetsController(
+            IDeletableEntityRepository<Cheatsheet> cheatsheetRepository,
+            IDeletableEntityRepository<Course> courseRepository,
+            ICheatsheetService cheatsheetService,
+            ICoursesService coursesService)
         {
             this.cheatsheetRepository = cheatsheetRepository;
             this.courseRepository = courseRepository;
+            this.cheatsheetService = cheatsheetService;
+            this.coursesService = coursesService;
         }
 
-        // GET: Administration/Cheatsheets
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var applicationDbContext = this.cheatsheetRepository.AllWithDeleted().Include(c => c.Course);
-            return this.View(await applicationDbContext.ToListAsync());
+            var cheatsheets = this.cheatsheetService.GetAllWithDeleted<CheatsheetViewModel>();
+
+            var model = new CheatsheetListViewModel()
+            {
+                Cheatsheets = cheatsheets,
+            };
+
+            return this.View(model);
         }
 
-        // GET: Administration/Cheatsheets/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var cheatsheet = await this.cheatsheetRepository.AllWithDeleted()
-                .Include(c => c.Course)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (cheatsheet == null)
+            var model = this.cheatsheetService.GetByIdWithDeleted<CheatsheetViewModel>((int)id);
+
+            if (model == null)
             {
                 return this.NotFound();
             }
 
-            return this.View(cheatsheet);
+            return this.View(model);
         }
 
-        // GET: Administration/Cheatsheets/Create
         public IActionResult Create()
         {
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.AllWithDeleted(), "Id", "Id");
+            this.ViewData["CourseNames"] = new SelectList(this.coursesService.GetAllWithDeleted<CourseViewModel>(), "Id", "Name");
             return this.View();
         }
 
-        // POST: Administration/Cheatsheets/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Content,CourseId,IsDeleted,DeletedOn,Id,CreatedOn,ModifiedOn")] Cheatsheet cheatsheet)
+        public async Task<IActionResult> Create(CheatsheetInputModel input)
         {
             if (this.ModelState.IsValid)
             {
-                await this.cheatsheetRepository.AddAsync(cheatsheet);
-                await this.cheatsheetRepository.SaveChangesAsync();
+                await this.cheatsheetService.Create(input);
                 return this.RedirectToAction(nameof(this.Index));
             }
 
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.AllWithDeleted(), "Id", "Id", cheatsheet.CourseId);
-            return this.View(cheatsheet);
+            this.ViewData["CourseNames"] = new SelectList(this.coursesService.GetAllWithDeleted<CourseViewModel>(), "Id", "Name", input.CourseId);
+            return this.View(input);
         }
 
         // GET: Administration/Cheatsheets/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var cheatsheet = this.cheatsheetRepository.AllWithDeleted().FirstOrDefault(c => c.Id == id);
-            if (cheatsheet == null)
+            var model = this.cheatsheetService.GetByIdWithDeleted<CheatsheetInputModel>((int)id);
+            if (model == null)
             {
                 return this.NotFound();
             }
 
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.AllWithDeleted(), "Id", "Id", cheatsheet.CourseId);
-            return this.View(cheatsheet);
+            this.ViewData["CourseNames"] = new SelectList(this.coursesService.GetAllWithDeleted<CourseViewModel>(), "Id", "Name", model.CourseId);
+            return this.View(model);
         }
 
-        // POST: Administration/Cheatsheets/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Content,CourseId,IsDeleted,DeletedOn,Id,CreatedOn,ModifiedOn")] Cheatsheet cheatsheet)
+        public async Task<IActionResult> Edit(int id, CheatsheetInputModel model)
         {
-            if (id != cheatsheet.Id)
+            if (id != model.Id)
             {
                 return this.NotFound();
             }
@@ -106,12 +112,11 @@
             {
                 try
                 {
-                    this.cheatsheetRepository.Update(cheatsheet);
-                    await this.cheatsheetRepository.SaveChangesAsync();
+                    await this.cheatsheetService.UpdateAsync(id, model);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!this.CheatsheetExists(cheatsheet.Id))
+                    if (!this.CheatsheetExists(model.Id))
                     {
                         return this.NotFound();
                     }
@@ -124,44 +129,38 @@
                 return this.RedirectToAction(nameof(this.Index));
             }
 
-            this.ViewData["CourseId"] = new SelectList(this.courseRepository.AllWithDeleted(), "Id", "Id", cheatsheet.CourseId);
-            return this.View(cheatsheet);
+            this.ViewData["CourseNames"] = new SelectList(this.coursesService.GetAllWithDeleted<CourseViewModel>(), "Id", "Name", model.CourseId);
+            return this.View(model);
         }
 
-        // GET: Administration/Cheatsheets/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var cheatsheet = await this.cheatsheetRepository.AllWithDeleted()
-                .Include(c => c.Course)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (cheatsheet == null)
+            var model = this.cheatsheetService.GetByIdWithDeleted<CheatsheetViewModel>((int)id);
+            if (model == null)
             {
                 return this.NotFound();
             }
 
-            return this.View(cheatsheet);
+            return this.View(model);
         }
 
-        // POST: Administration/Cheatsheets/Delete/5
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var cheatsheet = this.cheatsheetRepository.AllWithDeleted().FirstOrDefault(c => c.Id == id);
-            this.cheatsheetRepository.Delete(cheatsheet);
-            await this.cheatsheetRepository.SaveChangesAsync();
+            await this.cheatsheetService.DeleteAsync(id);
             return this.RedirectToAction(nameof(this.Index));
         }
 
         private bool CheatsheetExists(int id)
         {
-            return this.cheatsheetRepository.AllWithDeleted().Any(e => e.Id == id);
+            return this.cheatsheetService.CheatsheetExists(id);
         }
     }
 }

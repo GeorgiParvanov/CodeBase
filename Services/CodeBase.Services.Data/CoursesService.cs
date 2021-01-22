@@ -149,5 +149,11 @@
         {
             return this.coursesRepository.All().Where(c => c.Tags.Any(ct => ct.Tag.Name == name)).ToList().Count();
         }
+
+        public IEnumerable<T> GetAllWithDeleted<T>()
+        {
+            return this.coursesRepository.AllWithDeleted()
+                .To<T>().ToList();
+        }
     }
 }

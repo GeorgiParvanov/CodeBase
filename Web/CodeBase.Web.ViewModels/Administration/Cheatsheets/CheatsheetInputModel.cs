@@ -1,19 +1,19 @@
-﻿namespace CodeBase.Web.ViewModels.Administration.UserCourses
+﻿namespace CodeBase.Web.ViewModels.Administration.Cheatsheets
 {
     using System;
 
     using CodeBase.Data.Models;
     using CodeBase.Services.Mapping;
 
-    public class UserCourseViewModel : IMapFrom<UserCourse>
+    public class CheatsheetInputModel : IMapFrom<Cheatsheet>
     {
         public int Id { get; set; }
 
+        public string Name { get; set; }
+
+        public string Content { get; set; }
+
         public int CourseId { get; set; }
-
-        public string CourseName { get; set; }
-
-        public string UserId { get; set; }
 
         public bool IsDeleted { get; set; }
 
