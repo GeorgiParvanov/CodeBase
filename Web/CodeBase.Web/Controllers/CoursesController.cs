@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
 
+    using CodeBase.Common;
     using CodeBase.Data.Models;
     using CodeBase.Services.Data.Contracts;
     using CodeBase.Web.ViewModels.Courses;
@@ -11,8 +12,8 @@
 
     public class CoursesController : BaseController
     {
-        private const int ByTagItemsPerPage = 6;
-        private const int IndexItemsPerPage = 1;
+        private const int ByTagItemsPerPage = GlobalConstants.CoursesByTagItemsPerPage;
+        private const int IndexItemsPerPage = GlobalConstants.CoursesItemsPerPage;
         private readonly ICoursesService coursesService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IBalanceService balanceService;

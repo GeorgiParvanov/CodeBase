@@ -3,6 +3,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using CodeBase.Common;
     using CodeBase.Data;
     using CodeBase.Data.Common.Repositories;
     using CodeBase.Data.Models;
@@ -14,7 +15,7 @@
 
     public class CoursesController : AdministrationController
     {
-        private const int ItemsPerPage = 2;
+        private const int ItemsPerPage = GlobalConstants.AdministrationItemsPerPage;
         private readonly ICoursesService coursesService;
         private readonly UserManager<ApplicationUser> userManager;
 

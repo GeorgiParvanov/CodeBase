@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
 
+    using CodeBase.Common;
     using CodeBase.Data.Models;
     using CodeBase.Services.Data.Contracts;
     using CodeBase.Web.ViewModels.Courses;
@@ -11,7 +12,7 @@
 
     public class LibraryController : BaseController
     {
-        private const int ItemsPerPage = 1;
+        private const int ItemsPerPage = GlobalConstants.LibraryItemsPerPage;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ILibraryService libraryService;
 
