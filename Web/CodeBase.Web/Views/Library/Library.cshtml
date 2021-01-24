@@ -18,12 +18,6 @@
 
             <a asp-controller="Courses" asp-action="course" asp-route-id="@course.Id" class="btn btn-primary">View Lectures</a>
         </div>
-        <div class="card-footer text-muted">
-            @foreach (var tag in course.Tags)
-            {
-                <a asp-controller="Courses" asp-action="ByTag" asp-route-name="@tag.Name">@tag.Name</a>
-            }
-        </div>
     </div>
 }
 
